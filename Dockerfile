@@ -46,6 +46,10 @@ RUN apt-get update && apt-get install -y \
   php-pear \
   composer
 
+RUN pear install mail \
+pear upgrade MAIL Net_SMTP 
+
+
 RUN echo "<?php phpinfo() ?>" > /var/www/html/index.php ; \
 mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor ; \
 a2enmod rewrite  ;\
@@ -57,13 +61,10 @@ sed -i -e '/display_errors =/ s/= .*/= ON/' /etc/php/7.4/apache2/php.ini ; \
 sed -i -e '/short_open_tag =/ s/= .*/= ON/' /etc/php/7.4/apache2/php.ini ; \
 sed -i -e '/short_open_tag =/ s/= .*/= ON/' /etc/php/7.4/cli/php.ini ; \
 sed -i -e '/AllowOverride / s/ .*/ All/' /etc/apache2/apache2.conf ; \
-sed -i -e '/max_execution_time =/ s/= .*/= 1200/' /etc/php/7.4/apache2/php.ini ; 
+sed -i -e '/max_execution_time =/ s/= .*/= 1200/' /etc/php/7.4/apache2/php.ini ; \
+echo 'open_basedir = "/"' >> /etc/php/7.4/apache2/php.ini ; 
 
-RUN pear install mail \
-pear upgrade MAIL Net_SMTP \
-mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor
-
-
+RUN mkdir -p /var/lock/apache2 /var/run/apache2 /var/run/sshd /var/log/supervisor
 COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 EXPOSE 22 80
 CMD ["/usr/bin/supervisord"]
