@@ -41,6 +41,7 @@ RUN apt-get update && apt-get install -y \
   php7.4-ldap \
   php7.4-sybase \ 
   php7.4-pgsql \
+  php7.4-soap \
   php-redis \
   libapache2-mod-php7.4 \
   php-pear \
